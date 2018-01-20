@@ -46,6 +46,7 @@ public class WeChatUpdatePageProcess extends AbstractCommPageProcess {
 				page.addTargetRequest(page.getHtml().xpath(getConfig().getRule().getLoadlistxpath()).links().toString() + "&f=json");
 				page.getResultItems().setSkip(true);
 
+
 					//page.addTargetRequest(page.getUrl().get());
 
 			} else {
@@ -74,6 +75,7 @@ public class WeChatUpdatePageProcess extends AbstractCommPageProcess {
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			try {
+
 				String json = page.getRawText();
 				if (json == null || json.length() <= 2) {
 
@@ -96,6 +98,7 @@ public class WeChatUpdatePageProcess extends AbstractCommPageProcess {
 						List<Map> mapList = (List<Map>) msgmap.get("list");
 						if (mapList != null && mapList.size() > 0) {
 							for (Map msgMap : mapList) {
+
 								if (msgMap.containsKey("app_msg_ext_info")) {
 									Map urlmap = (Map) msgMap.get("app_msg_ext_info");
 									if (urlmap.get("content_url") != null && urlmap.get("content_url").toString().length() > 0) {
@@ -142,7 +145,8 @@ public class WeChatUpdatePageProcess extends AbstractCommPageProcess {
 		} else {
 			page.getResultItems().setSkip(true);
 		}
-
+		page.putField("articleType",getConfig().getWechat().getArticleType());
+		page.getResultItems().put("articleType",getConfig().getWechat().getArticleType());
 		String[] times = delay.split(":");
 		List<Long> list = new ArrayList<Long>();
 		for (String s : times) {

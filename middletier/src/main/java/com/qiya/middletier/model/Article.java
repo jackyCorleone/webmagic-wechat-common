@@ -20,13 +20,13 @@ public class Article implements IModel {
     private String title;
     @Column(name = "introduce",columnDefinition = "NVARCHAR(500) COMMENT '简介'")
     private String introduce;
-    @Column(name = "author",columnDefinition = "NVARCHAR(50) COMMENT '作者'")
+    @Column(name = "author",columnDefinition = "VARCHAR(50) COMMENT '作者'")
     private String author;
     @Column(name = "pic",columnDefinition = "NVARCHAR(200) COMMENT '封面图片'")
     private String pic;
     @Column(name = "public_time",columnDefinition = "datetime COMMENT '发布时间'")
     private Date publicTime;
-    @Column(name = "link_url",columnDefinition = "NVARCHAR(200) COMMENT '原文链接地址'")
+    @Column(name = "link_url",columnDefinition = "text COMMENT '原文链接地址'")
     private String linkUrl;
     @Column(name = "good_count",columnDefinition = "int COMMENT '点赞数'")
     private Integer goodCount;
@@ -36,6 +36,8 @@ public class Article implements IModel {
     private Date createTime;
     @Column(name = "status")
     private Integer status;
+    @Column(name = "article_type")
+    private Integer articleType;
     public Long getId() {
         return id;
     }
@@ -108,6 +110,12 @@ public class Article implements IModel {
     public void setPic(String pic) {
         this.pic = pic;
     }
+    public Integer getArticleType() {
+        return articleType;
+    }
+    public void setArticleType(Integer articleType) {
+        this.articleType = articleType;
+    }
     @Override
     public void update(JsonObject jo) {
         if (jo.has("siteId"))
@@ -132,5 +140,7 @@ public class Article implements IModel {
             this.setCreateTime(DateUtils.toDateTime(jo.get("createTime").toString()));
         if (jo.has("status"))
             this.setStatus(jo.get("status").getAsInt());
+        if (jo.has("articleType"))
+            this.setStatus(jo.get("articleType").getAsInt());
     }
 }

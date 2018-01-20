@@ -32,9 +32,9 @@ var projectConfig = (function(heitu) {
 			fileUploadUrl : 'http://120.132.7.71:9021/uploadfile'
 		},
 		'PROD' : {
-			SITE_URL : 'http://daydayupboss.qiyadeng.com/',
-			API_URL : 'http://daydayupboss.qiyadeng.com/',
-			fileUploadUrl : 'http://daydayupboss.qiyadeng.com/'
+			SITE_URL : 'http://localhost:8015/',
+			API_URL : 'http://localhost:8015/',
+			fileUploadUrl : 'http://localhost:8015/'
 		}
 	};
 

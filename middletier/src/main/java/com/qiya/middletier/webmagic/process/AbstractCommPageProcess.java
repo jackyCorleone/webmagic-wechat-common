@@ -284,4 +284,110 @@ public abstract class AbstractCommPageProcess implements PageProcessor {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
+
+	public Page setPutFile2(Page page, RuleMatchConfig ruleMatchConfig){
+		setRinseRule(page);
+		setCommRinseRule(page);
+		Date startTime = null;
+		Date endTime = null;
+
+		// 获取判断开始结束时间
+		Map condition = config.getCondition();
+		if (condition != null) {
+			startTime = condition.get("startTime") == null ? null : DateUtils.toDate(condition.get("startTime").toString());
+			endTime = condition.get("endTime") == null ? null : DateUtils.toDate(condition.get("endTime").toString());
+		}
+
+		SpiderConfig spiderConfig = config.getSpider();
+		page.putField("siteId", Long.valueOf(spiderConfig.getSiteid()));
+
+		if (ruleMatchConfig.getDetailxpath() == null) {
+			return page;
+		}
+
+		List<Selectable> list = page.getHtml().xpath(ruleMatchConfig.getDetailregex()).nodes();
+		for (Selectable s : list) {
+			HashMap<Object, Object> stringObjectHashMap = new HashMap<>();
+
+			for (DetailxpathConfig rule : ruleMatchConfig.getDetailxpath()) {
+				// 处理时间
+				if (StringUtils.isNotEmpty(rule.getSimpleDateFormat())) {
+					String publishDate;
+					Date publishTime;
+
+					try {
+						if (StringUtils.isNotEmpty(rule.getValue())) {
+							Selectable node = page.getHtml().xpath(rule.getValue());
+							if (StringUtils.isNotEmpty(rule.getReg())) {
+								node = node.regex(rule.getReg());
+							}
+							publishDate = node.toString();
+						} else {
+							publishDate = page.getHtml().regex(rule.getReg()).toString();
+						}
+
+						SimpleDateFormat simpleDateFormat = new SimpleDateFormat(rule.getSimpleDateFormat());
+						publishTime = simpleDateFormat.parse(publishDate);
+						// 如果时间没有包含年份,则默认使用当前年
+						if (!simpleDateFormat.toPattern().contains("yyyy")) {
+							Calendar calendar = Calendar.getInstance();
+							calendar.setTime(publishTime);
+							calendar.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
+							publishTime = calendar.getTime();
+						}
+
+					} catch (Exception e) {
+						// 解析错误当前时间
+						publishTime = new Date();
+					}
+
+					page.putField(rule.getName(), publishTime);
+
+					// 判断开始结束时间
+					if (startTime != null && endTime != null) {
+						Integer timeStatus = TaskPropressEnum.SAVEDB.getValue();
+						Date pulishDate1 = DateUtils.toDate(DateUtils.toDateString(publishTime));
+
+						if (pulishDate1.getTime() > endTime.getTime() && pulishDate1.getTime() > startTime.getTime()) {
+							timeStatus = TaskPropressEnum.CONTINUE.getValue();
+							log.info("爬取历史文章日期未达到指定时间范围,需继续爬.");
+
+						} else if (pulishDate1.getTime() < startTime.getTime() && pulishDate1.getTime() < endTime.getTime()) {
+							timeStatus = TaskPropressEnum.TASKSTOP.getValue();
+							log.info("爬取历史文章日期已超出开始时间范围.");
+
+						} else {
+							log.info("爬取历史文章日期在指定范围内.");
+						}
+
+						page.putField("taskStatus", timeStatus);
+					}
+
+				} else {
+					Object node ;
+					if (StringUtils.isNotEmpty(rule.getValue())) {
+						node = s.xpath(rule.getValue());
+						if (StringUtils.isNotEmpty(rule.getReg())) {
+							node = s.regex(rule.getReg());
+						}
+						//page.putField(rule.getName(), node);
+						stringObjectHashMap.put(rule.getName(),node);
+
+					} else {
+						//page.putField(rule.getName(), s.regex(rule.getReg()).toString());
+						stringObjectHashMap.put(rule.getName(),s.regex(rule.getReg()).toString());
+
+
+					}
+				}
+
+			}
+			page.putField("funny"+stringObjectHashMap.get("label").toString(), stringObjectHashMap);
+
+		}
+
+		return page;
+
+	}
+
 }

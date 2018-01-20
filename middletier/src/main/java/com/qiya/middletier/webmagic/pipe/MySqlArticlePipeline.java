@@ -3,6 +3,7 @@ package com.qiya.middletier.webmagic.pipe;
 import java.util.Date;
 import java.util.Map;
 
+import java.util.Set;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,6 +118,12 @@ public class MySqlArticlePipeline implements Pipeline {
 				 * 添加文章信息
 				 */
 				Article article = new Article();
+				/*for (Map.Entry<String, Object> entry : resultItems.getAll().entrySet()) {
+					if (entry.getKey().contains("articleType")) {
+						Integer value = (Integer) entry.getValue();
+						article.setArticleType(value);
+					}
+				}*/
 				BeanUtils.populate(article, resultItems.getAll());
 
 				article.setCreateTime(new Date());
@@ -159,25 +166,25 @@ public class MySqlArticlePipeline implements Pipeline {
 					if(site.getType().compareTo(SiteType.WECHAT.id)==0)
 					{
 						String url = article.getPic();
-						if(!StringUtils.isEmpty(url))
+						/*if(!StringUtils.isEmpty(url))
 						{
 							byte[] imageByte = articleService.getWechatImage(url);
 							String imageName = this.QINNIU_PREFIX+sysService.getActiveProfile()+"/"+ GenerateUtils.getUUID();
 							String key = qiniuService.uploadFileKey(imageByte,imageName);
 							log.info("微信存储七牛地址:{}",key);
 							article.setPic(qinniuHttpContext+key);
-						}
+						}*/
 					}
 					else if(site.getType().compareTo(SiteType.WEB.id)==0)
 					{
 						String url = article.getPic();
-						if(!StringUtils.isEmpty(url))
+						/*if(!StringUtils.isEmpty(url))
 						{
 							String imageName = this.QINNIU_PREFIX+sysService.getActiveProfile()+"/"+ GenerateUtils.getUUID();
 							String key = qiniuService.uploadFileByUrl(url,imageName);
 							log.info("网站存储七牛地址:{}",key);
 							article.setPic(qinniuHttpContext+key);
-						}
+						}*/
 
 					}
 

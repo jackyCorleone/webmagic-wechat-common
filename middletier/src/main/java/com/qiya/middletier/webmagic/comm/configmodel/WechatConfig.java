@@ -10,6 +10,15 @@ public class WechatConfig {
 
 	private String url;
 
+	private Integer articleType;
+
+	public Integer getArticleType() {
+		return articleType;
+	}
+	public void setArticleType(Integer articleType) {
+		this.articleType = articleType;
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}

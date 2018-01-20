@@ -42,12 +42,17 @@ public class WeChatHistoryPageProcess extends AbstractCommPageProcess {
 					List<Map> mapList = (List<Map>) msgmap.get("list");
 					if (mapList != null && mapList.size() > 0) {
 						if ("1".equals(map.get("can_msg_continue").toString())) {
-							Map amap = mapList.get(mapList.size() - 1);
+							/*Map amap = mapList.get(mapList.size() - 1);
 							Map commmsginfo = (Map) amap.get("comm_msg_info");
 							String msgid = commmsginfo.get("id").toString();
 							String url = getConfig().getWechat().getUrl();
 							List listurl = new ArrayList();
 							listurl.add(url.replace("[MESSAGEID]", msgid));
+							page.addTargetRequests(listurl, 9999);*/
+							Integer msgid = (Integer) map.get("next_offset");
+							String url = getConfig().getWechat().getUrl();
+							List listurl = new ArrayList();
+							listurl.add(url.replace("[MESSAGEID]", msgid.toString()));
 							page.addTargetRequests(listurl, 9999);
 						}
 						for (Map msgMap : mapList) {
@@ -96,6 +101,7 @@ public class WeChatHistoryPageProcess extends AbstractCommPageProcess {
 		}else {
 			page.getResultItems().setSkip(true);
 		}
+		page.getResultItems().put("articleType",getConfig().getWechat().getArticleType());
 		setIsCircle(page);
 
 	}
