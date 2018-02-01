@@ -1,5 +1,6 @@
 package com.qiya.middletier.webmagic.downloader;
 
+import com.qiya.middletier.webmagic.ProxyCralwerUnusedVPN;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -50,6 +51,8 @@ public class WeChatDownloader extends CustomAbstractDownloader {
 
 	@Autowired
 	private NetPoxyService netPoxyService;
+	@Autowired
+	private ProxyCralwerUnusedVPN proxyCralwerUnusedVPN;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final Map<String, CloseableHttpClient> httpClients = new HashMap();
@@ -124,7 +127,8 @@ public class WeChatDownloader extends CustomAbstractDownloader {
 			}
 			Boolean isdynamicProxy = getConfig().getSite().getDynamicProxy();
 			if (isdynamicProxy!=null &&isdynamicProxy.booleanValue()) {
-				e=netPoxyService.getpoxy();
+				//e=netPoxyService.getpoxy();
+				e=proxyCralwerUnusedVPN.startCrawler(1);
 			}
 			HttpUriRequest e1 = this.getHttpUriRequest(request, site, headers, e);
 			httpResponse = this.getHttpClient(site, proxy1).execute(e1);

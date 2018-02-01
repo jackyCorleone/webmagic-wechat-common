@@ -106,6 +106,13 @@ public class MySqlFunnyPipeline implements Pipeline {
                             funny.setContentType(1);
                         }else {
                             funny.setContentType(2);
+                            if(!funny.getContent().startsWith("http")){
+                                funny.setContent("http:"+funny.getContent());
+                            }
+                        }
+
+                        if(!StringUtils.isEmpty(funny.getAuthorAvatar()) && !funny.getAuthorAvatar().startsWith("http")){
+                            funny.setAuthorAvatar("http:"+funny.getAuthorAvatar());
                         }
                         if (StringUtils.isEmpty(funny.getTitle())) {
                             resultItems.setSkip(true);
@@ -120,7 +127,7 @@ public class MySqlFunnyPipeline implements Pipeline {
                         if (!funnyService.isExists(funny.getLabel())) {
 
                             funnyService.create(funny);
-                            log.info("爬取任务文章保存数据库:" + funny.getLabel() + "!");
+                            log.info("爬取任务段子保存数据库:" + funny.getLabel() + "!");
 
 
                         } else {
