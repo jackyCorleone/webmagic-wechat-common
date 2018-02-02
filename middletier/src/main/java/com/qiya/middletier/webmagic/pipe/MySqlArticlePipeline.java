@@ -205,11 +205,11 @@ public class MySqlArticlePipeline implements Pipeline {
 					articleDetail.setStatus(article.getStatus());
 
 					articleDetailService.create(articleDetail);
-				} else if(!articleService.isExistTiteSiteTime(article.getSiteId(), article.getTitle(), article.getPublicTime())){
+				} /*else if(!articleService.isExistTiteSiteTime(article.getSiteId(), article.getTitle(), article.getPublicTime())){
 					Article articlebyTiteSiteAuthor = articleService.getArticlebyTiteSiteAuthor(article.getSiteId(), article.getTitle(), article.getAuthor());
 					article.setId(articlebyTiteSiteAuthor.getId());
 					articleService.update(article);
-				} else {
+				} */else {
 					resultItems.setSkip(true);
 				}
 			} catch (Exception ex) {
