@@ -100,7 +100,9 @@ public class MySqlFunnyPipeline implements Pipeline {
                         funny.setHistory(false);
                         funny.setRecommend(false);
                         funny.setPlacedTop(false);
-                        funny.setCreateDate(new Date());
+                        Date date = new Date();
+                        funny.setCreateDate(date);
+                        funny.setModifyDate(date);
                         funny.setStatus(StatusEnum.VALID.getValue());
                         if(StringUtils.isEmpty(funny.getContent())){
                             funny.setContentType(1);

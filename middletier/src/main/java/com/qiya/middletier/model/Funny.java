@@ -43,7 +43,7 @@ public class Funny implements IModel{
     private Boolean recommend;
     @Column(name = "status",columnDefinition = "int COMMENT '状态'")
     private Integer status;
-    @Column(name = "create_time",columnDefinition = "datetime COMMENT '创建时间'")
+    @Column(name = "create_date",columnDefinition = "datetime COMMENT '创建时间'")
     private Date createDate;
     @Column(name = "modify_date",columnDefinition = "datetime COMMENT '修改时间'")
     private Date modifyDate;
